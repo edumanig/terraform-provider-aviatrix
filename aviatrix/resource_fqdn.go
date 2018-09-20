@@ -97,7 +97,7 @@ func resourceAviatrixFQDNCreate(d *schema.ResourceData, meta interface{}) error 
 		d.Set("gw_list", fqdn.GwList)
 	}
 	if fqdn_status := d.Get("fqdn_status").(string); fqdn_status == "enabled" {
-		log.Printf("[TRACE] FQDNCreate Enable FQDN tag status: %#v", fqdn)
+		log.Printf("[INOF] Enable FQDN tag status: %#v", fqdn)
 		err := client.UpdateFQDNStatus(fqdn)
 		if err != nil {
 			return fmt.Errorf("Failed to update FQDN status : %s", err)
@@ -105,7 +105,7 @@ func resourceAviatrixFQDNCreate(d *schema.ResourceData, meta interface{}) error 
 	}
 	// update fqdn_mode when set to non-default "blacklist" mode
 	if fqdn_mode := d.Get("fqdn_mode").(string); fqdn_mode == "black" {
-		log.Printf("[INFO] FQDNCreate Enable FQDN Mode: %#v", fqdn)
+		log.Printf("[INFO] Enable FQDN Mode: %#v", fqdn)
 		err := client.UpdateFQDNMode(fqdn)
 		if err != nil {
 			return fmt.Errorf("Failed to update FQDN mode : %s", err)
@@ -144,7 +144,7 @@ func resourceAviatrixFQDNRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Couldn't list FQDN domains: %s", err)
 	}
 	if newfqdn != nil {
-		// This is nothing of ListDomains return empty
+		// This is nothing IF ListDomains return empty
 		var filter []map[string]interface{}
 		for _, fqdnDomain := range newfqdn.DomainList {
 			dn := make(map[string]interface{})
@@ -250,10 +250,6 @@ func resourceAviatrixFQDNDelete(d *schema.ResourceData, meta interface{}) error 
 	fqdn := &goaviatrix.FQDN{
 		FQDNTag: d.Get("fqdn_tag").(string),
 	}
-	for i := range fqdn.GwList {
-		log.Printf("EDSEL ............................................ gw_name=%s", fqdn.GwList[i])
-	}
-
 	if _, ok := d.GetOk("gw_list"); ok {
 		fqdn.GwList = goaviatrix.ExpandStringList(d.Get("gw_list").([]interface{}))
 		err := client.DetachGws(fqdn)
