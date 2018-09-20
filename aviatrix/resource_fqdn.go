@@ -123,6 +123,7 @@ func resourceAviatrixFQDNRead(d *schema.ResourceData, meta interface{}) error {
 		FQDNMode:   d.Get("fqdn_mode").(string),
 	}
 
+	log.Printf("[INFO] Reading Aviatrix FQDN: %#v", fqdn)
 	newfqdn, err := client.GetFQDNTag(fqdn)
 	if err != nil {
 		if err == goaviatrix.ErrNotFound {
@@ -250,7 +251,9 @@ func resourceAviatrixFQDNDelete(d *schema.ResourceData, meta interface{}) error 
 	fqdn := &goaviatrix.FQDN{
 		FQDNTag: d.Get("fqdn_tag").(string),
 	}
+	log.Printf("[INFO] Deleting Aviatrix FQDN: %#v", fqdn)
 	if _, ok := d.GetOk("gw_list"); ok {
+		log.Printf("[INFO] Found GWs: %#v", fqdn)
 		fqdn.GwList = goaviatrix.ExpandStringList(d.Get("gw_list").([]interface{}))
 		err := client.DetachGws(fqdn)
 		if err != nil {
