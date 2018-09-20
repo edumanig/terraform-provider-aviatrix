@@ -26,29 +26,11 @@ type FQDN struct {
 	DomainList              []*Filters `form:"domain_names[],omitempty" json:"domain_names,omitempty"`
 }
 
-
-//type DomainResp struct {
-//	Return  bool   `json:"return"`
-//	Results []*Filters `json:"results"`
-//	Reason  string `json:"reason"`
-//}
 type ResultListResp struct {
 	Return  bool   `json:"return"`
 	Results []string `json:"results"`
 	Reason  string `json:"reason"`
 }
-//type Data struct {
-//	Return  bool   `json:"return"`
-//	Results []Template `json:"data"`
-//	Reason  string `json:"reason"`
-//}
-
-//type Template struct {
-//	FQDN     string   `json:"fqdn"`
-//	Protocol string   `json:"proto"`
-//	Port    string   `json:"port"`
-//
-//}
 
 func (c *Client) CreateFQDN(fqdn *FQDN) (error) {
 	path := c.baseURL + fmt.Sprintf("?CID=%s&action=add_fqdn_filter_tag&tag_name=%s", c.CID, fqdn.FQDNTag)
